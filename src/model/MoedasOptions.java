@@ -1,10 +1,11 @@
 package model;
 
 public class MoedasOptions {
-	private String sigla;
+	private String sigla, nome;
 	
-	public MoedasOptions(String sigla) {
+	public MoedasOptions(String sigla, String nome) {
 		this.sigla = sigla;
+		this.nome = nome;
 	}
 	
 	public String getSigla() {
@@ -14,9 +15,17 @@ public class MoedasOptions {
 		this.sigla = sigla;
 	}
 	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
 	@Override
 	public String toString() {
-		return getSigla();
+		// return getSigla();
+		return getNome();
 	}
 
 }

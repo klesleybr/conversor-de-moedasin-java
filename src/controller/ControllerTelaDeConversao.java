@@ -3,6 +3,7 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -10,7 +11,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -73,6 +76,11 @@ public class ControllerTelaDeConversao implements Initializable {
 		System.out.printf("Moeda de origem selecionada: %s  |  Moeda de destino selecionada: %s\n", opcaoOrigemSelecionada.getSigla(),
 				opcaoDestinoSelecionada.getSigla());
 		
+		if(opcaoOrigemSelecionada == opcaoDestinoSelecionada) {
+			restaurarAction();
+			return;
+		}
+		
 		double valorOrigem = Double.valueOf(txtFieldMoedaOrigem.getText());
 		
 		Conversor conversor = new Conversor(opcaoOrigemSelecionada.getSigla(), opcaoDestinoSelecionada.getSigla(), valorOrigem);
@@ -85,14 +93,7 @@ public class ControllerTelaDeConversao implements Initializable {
 
     @FXML
     void onClickBtnRestaurar(ActionEvent event) {
-    	txtFieldMoedaOrigem.setText(new String("0"));
-    	txtFieldMoedaDestino.setText(new String());
-    	
-    	labelDescricaoMoedaOrigem.setText("BRL");
-    	labelDescricaoMoedaDestino.setText("USD");
-    	
-    	escolherMoedaOrigem.getSelectionModel().select(0);
-		escolherMoedaDestino.getSelectionModel().select(5);
+    	restaurarAction();
     }
 
 	@Override
@@ -103,14 +104,24 @@ public class ControllerTelaDeConversao implements Initializable {
 		txtFieldMoedaOrigem.setText(new String("0"));
 	}
 	
+	public void restaurarAction() {
+		txtFieldMoedaOrigem.setText(new String("0"));
+    	txtFieldMoedaDestino.setText(new String());
+    	
+    	labelDescricaoMoedaOrigem.setText("BRL");
+    	labelDescricaoMoedaDestino.setText("USD");
+    	
+    	escolherMoedaOrigem.getSelectionModel().select(0);
+		escolherMoedaDestino.getSelectionModel().select(5);
+	}
 	
 	public void setOptions() {
-		MoedasOptions moedaOption1 = new MoedasOptions("BRL"); // Real
-		MoedasOptions moedaOption2 = new MoedasOptions("EUR"); // Euro
-		MoedasOptions moedaOption3 = new MoedasOptions("GBP"); // Libras
-		MoedasOptions moedaOption4 = new MoedasOptions("JPY"); // Iene
-		MoedasOptions moedaOption5 = new MoedasOptions("RUB"); // Rublo
-		MoedasOptions moedaOption6 = new MoedasOptions("USD"); // Dólar
+		MoedasOptions moedaOption1 = new MoedasOptions("BRL", "Real BR"); // Real
+		MoedasOptions moedaOption2 = new MoedasOptions("EUR", "Euro"); // Euro
+		MoedasOptions moedaOption3 = new MoedasOptions("GBP", "Libra"); // Libras
+		MoedasOptions moedaOption4 = new MoedasOptions("JPY", "Iene"); // Iene
+		MoedasOptions moedaOption5 = new MoedasOptions("RUB", "Rublo"); // Rublo
+		MoedasOptions moedaOption6 = new MoedasOptions("USD", "Dólar USA"); // Dólar
 		
 		listMoedaOrigem.add(moedaOption1);
 		listMoedaOrigem.add(moedaOption2);
@@ -131,6 +142,20 @@ public class ControllerTelaDeConversao implements Initializable {
 		
 		obsMoedaDestino = FXCollections.observableArrayList(listMoedaDestino);
 		escolherMoedaDestino.setItems(obsMoedaDestino);
+	}
+	
+	public static boolean onCloseQuery() {
+		Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+		alerta.setTitle("Fechar Conversor");
+		alerta.setHeaderText("Deseja realmente sair do programa?");
+		
+		ButtonType botaoSim = ButtonType.YES;
+		ButtonType botaoNao = ButtonType.NO;
+		alerta.getButtonTypes().setAll(botaoSim, botaoNao);
+		
+		Optional<ButtonType> opcaoSelecionada = alerta.showAndWait();
+		
+		return opcaoSelecionada.get() == botaoSim ? true : false;
 	}
 
 }

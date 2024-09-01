@@ -24,6 +24,10 @@ public class Main extends Application {
 			
 			ControllerTelaDeConversao telaDeConversao = loader.getController();
 			
+			primaryStage.setOnCloseRequest(e->{
+				if(ControllerTelaDeConversao.onCloseQuery()) System.exit(0);
+				else e.consume();
+			});
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
